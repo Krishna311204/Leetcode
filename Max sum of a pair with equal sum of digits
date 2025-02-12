@@ -1,0 +1,20 @@
+class Solution(object):
+    def maximumSum(self, nums):
+        def sum_of_digits(n):
+            return sum(int(digit) for digit in str(n))
+        
+        digit_sum_map = {}
+        
+        for num in nums:
+            s = sum_of_digits(num)
+            if s not in digit_sum_map:
+                digit_sum_map[s] = []
+            digit_sum_map[s].append(num)
+
+        max_sum = -1
+        for num_list in digit_sum_map.values():
+            if len(num_list) > 1:
+                num_list.sort(reverse=True)
+                max_sum = max(max_sum, num_list[0] + num_list[1])
+
+        return max_sum
