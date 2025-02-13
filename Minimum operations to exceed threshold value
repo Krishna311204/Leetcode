@@ -1,0 +1,22 @@
+import heapq
+
+class Solution(object):
+    def minOperations(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        operations = 0
+        heapq.heapify(nums)
+
+        while nums[0] < k and len(nums) > 1:
+            x = heapq.heappop(nums)
+            y = heapq.heappop(nums)
+            result = min(x, y) * 2 + max(x, y)
+            heapq.heappush(nums, result)
+            operations += 1
+
+        return operations
+
+  
