@@ -1,0 +1,26 @@
+bool isValidPartition(char *sqrStr,int num,int index,int currentSum){
+    if(index==strlen(sqrStr)){
+        return currentSum==num;
+    }
+    int value=0;
+    for(int i=index;i<strlen(sqrStr);i++){
+        value=value*10+(sqrStr[i]-'0');
+        if(isValidPartition(sqrStr,num,i+1,currentSum+value)){
+            return true;
+        }
+    }
+    return false;
+}
+
+int punishmentNumber(int n) {
+    int sum=0;
+    char sqrStr[20];
+    for(int i=1;i<=n;i++){
+        int square=i*i;
+        sprintf(sqrStr, "%d",square);
+        if(isValidPartition(sqrStr,i,0,0)){
+            sum+=square;
+        }
+    }
+    return sum;
+}
