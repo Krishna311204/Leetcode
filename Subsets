@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void generateSubsets(int* nums, int numsSize, int index, int* currentSubset, int currentSize, int** result, int* returnSize, int* returnColumnSizes) {
+    result[*returnSize] = (int*)malloc(currentSize * sizeof(int));
+    for (int i = 0; i < currentSize; i++) {
+        result[*returnSize][i] = currentSubset[i];
+    }
+    returnColumnSizes[*returnSize] = currentSize;
+    (*returnSize)++;
+
+    for (int i = index; i < numsSize; i++) {
+        currentSubset[currentSize] = nums[i];
+        generateSubsets(nums, numsSize, i + 1, currentSubset, currentSize + 1, result, returnSize, returnColumnSizes);
+    }
+}
+
+int** subsets(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
+    int maxSubsets = 1 << numsSize;  
+    int** result = (int**)malloc(maxSubsets * sizeof(int*));
+    *returnColumnSizes = (int*)malloc(maxSubsets * sizeof(int));
+    *returnSize = 0;
+    int* currentSubset = (int*)malloc(numsSize * sizeof(int));
+
+    generateSubsets(nums, numsSize, 0, currentSubset, 0, result, returnSize, *returnColumnSizes);
+
+    free(currentSubset);
+    return result;
+}
