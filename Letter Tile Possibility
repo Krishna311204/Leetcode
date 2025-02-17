@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_LEN 7
+
+int factorial(int n) {
+    int fact = 1;
+    for (int i = 2; i <= n; i++) {
+        fact *= i;
+    }
+    return fact;
+}
+
+void countSequences(char *tiles, bool used[], char *current, int length, int *count) {
+    for (int i = 0; i < length; i++) {
+        if (used[i] || (i > 0 && tiles[i] == tiles[i - 1] && !used[i - 1])) {
+            continue;
+        }
+        
+        used[i] = true;
+        (*count)++;
+        countSequences(tiles, used, current, length, count);
+        used[i] = false;
+    }
+}
+
+int numTilePossibilities(char *tiles) {
+    int length = strlen(tiles);
+    bool used[MAX_LEN] = {false};
+    char current[MAX_LEN + 1];
+    int count = 0;
+    
+    for (int i = 0; i < length - 1; i++) {
+        for (int j = i + 1; j < length; j++) {
+            if (tiles[i] > tiles[j]) {
+                char temp = tiles[i];
+                tiles[i] = tiles[j];
+                tiles[j] = temp;
+            }
+        }
+    }
+    
+    countSequences(tiles, used, current, length, &count);
+    return count;
+}
