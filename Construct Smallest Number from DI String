@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_LEN 10  
+
+char* smallestNumber(char *pattern) {
+    int n = strlen(pattern);
+    char* result = (char*)malloc((n + 2) * sizeof(char));
+    int index = 0;
+    
+    int stack[MAX_LEN]; 
+    int top = -1; 
+
+    for (int i = 0; i <= n; i++) {
+        stack[++top] = i + 1; 
+
+        if (i == n || pattern[i] == 'I') {
+            while (top >= 0) {
+                result[index++] = stack[top--] + '0'; 
+            }
+        }
+    }
+    
+    result[index] = '\0'; 
+    return result;
+}
+
+void execute() {
+    char pattern1[] = "IIIDIDDD";
+    char pattern2[] = "DDD";
+
+    char* result1 = smallestNumber(pattern1);
+    char* result2 = smallestNumber(pattern2);
+
+    printf("Output for pattern \"%s\": %s\n", pattern1, result1);
+    printf("Output for pattern \"%s\": %s\n", pattern2, result2);
+
+    free(result1);
+    free(result2);
+}
+
+__attribute__((constructor))
+void run_before_main() {
+    execute();
+}
