@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+void generateHappyStrings(int n, char *current, int length, char **result, int *count, int k) {
+    if (length == n) {
+        (*count)++;
+        if (*count == k) {
+            strcpy(*result, current);
+        }
+        return;
+    }
+    char lastChar = (length > 0) ? current[length - 1] : '\0';
+    char choices[] = {'a', 'b', 'c'};
+    for (int i = 0; i < 3; i++) {
+        if (choices[i] != lastChar) {
+            current[length] = choices[i];
+            current[length + 1] = '\0';
+            generateHappyStrings(n, current, length + 1, result, count, k);
+        }
+    }
+}
+char* getHappyString(int n, int k) {
+    char *result = (char *)malloc((n + 1) * sizeof(char));
+    if (!result) return ""; 
+    result[0] = '\0';
+    char *current = (char *)malloc((n + 1) * sizeof(char));
+    if (!current) {
+        free(result);
+        return "";
+    }
+    current[0] = '\0';
+    int count = 0;
+    generateHappyStrings(n, current, 0, &result, &count, k);
+    free(current);
+    return (count >= k) ? result : "";
+}
