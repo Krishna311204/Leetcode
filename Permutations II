@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void backtrack(int *nums, int numsSize, int *perm, bool *used, int index, int **results, int *returnSize, int **returnColumnSizes) {
+    if (index == numsSize) {
+        results[*returnSize] = (int *)malloc(numsSize * sizeof(int));
+        for (int i = 0; i < numsSize; i++) {
+            results[*returnSize][i] = perm[i];
+        }
+        (*returnColumnSizes)[*returnSize] = numsSize;
+        (*returnSize)++;
+        return;
+    }
+    
+    for (int i = 0; i < numsSize; i++) {
+        if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+            continue;
+        }
+        used[i] = true;
+        perm[index] = nums[i];
+        backtrack(nums, numsSize, perm, used, index + 1, results, returnSize, returnColumnSizes);
+        used[i] = false;
+    }
+}
+
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+int** permuteUnique(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
+    qsort(nums, numsSize, sizeof(int), compare);
+    int maxPermutations = 1;
+    for (int i = 2; i <= numsSize; i++) {
+        maxPermutations *= i;
+    }
+    int **results = (int **)malloc(maxPermutations * sizeof(int *));
+    *returnColumnSizes = (int *)malloc(maxPermutations * sizeof(int));
+    *returnSize = 0;
+    bool *used = (bool *)calloc(numsSize, sizeof(bool));
+    int *perm = (int *)malloc(numsSize * sizeof(int));
+    backtrack(nums, numsSize, perm, used, 0, results, returnSize, returnColumnSizes);
+    free(used);
+    free(perm);
+    return results;
+}
