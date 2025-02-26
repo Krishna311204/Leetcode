@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
+
+char* minWindow(char* s, char* t) {
+    int m = strlen(s), n = strlen(t);
+    if (m < n) return "";
+    int required[128] = {0}, window[128] = {0};
+    for (int i = 0; i < n; i++) required[t[i]]++;
+    int left = 0, right = 0, minLen = INT_MAX, start = 0, count = 0;
+    while (right < m) {
+        if (required[s[right]] > 0) {
+            window[s[right]]++;
+            if (window[s[right]] <= required[s[right]]) count++;
+        }
+        while (count == n) {
+            if (right - left + 1 < minLen) {
+                minLen = right - left + 1;
+                start = left;
+            }
+            if (required[s[left]] > 0) {
+                window[s[left]]--;
+                if (window[s[left]] < required[s[left]]) count--;
+            }
+            left++;
+        }
+        right++;
+    }
+    if (minLen == INT_MAX) return "";
+    char* result = (char*)malloc((minLen + 1) * sizeof(char));
+    strncpy(result, s + start, minLen);
+    result[minLen] = '\0';
+    return result;
+}
