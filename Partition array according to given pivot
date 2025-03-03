@@ -1,0 +1,31 @@
+#include <stdlib.h>
+
+int* pivotArray(int* nums, int numsSize, int pivot, int* returnSize) {
+    int* result = (int*)malloc(numsSize * sizeof(int));
+    if (!result) return NULL;
+
+    int lessCount = 0, equalCount = 0, greaterCount = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] < pivot) lessCount++;
+        else if (nums[i] == pivot) equalCount++;
+        else greaterCount++;
+    }
+
+    int index = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] < pivot) result[index++] = nums[i];
+    }
+
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] == pivot) result[index++] = nums[i];
+    }
+
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] > pivot) result[index++] = nums[i];
+    }
+
+    *returnSize = numsSize;
+    return result;
+}
