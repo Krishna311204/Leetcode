@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct TreeNode* newNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+struct TreeNode* recoverFromPreorder(char* traversal) {
+    struct TreeNode* stack[1000];
+    int depthStack[1000];
+    int top = -1;
+    int i = 0, n = strlen(traversal);
+
+    while (i < n) {
+        int depth = 0;
+        while (i < n && traversal[i] == '-') {
+            depth++;
+            i++;
+        }
+
+        int value = 0;
+        while (i < n && traversal[i] >= '0' && traversal[i] <= '9') {
+            value = value * 10 + (traversal[i] - '0');
+            i++;
+        }
+
+        struct TreeNode* node = newNode(value);
+
+        while (top >= 0 && depthStack[top] >= depth) {
+            top--;
+        }
+
+        if (top >= 0) {
+            if (!stack[top]->left) {
+                stack[top]->left = node;
+            } else {
+                stack[top]->right = node;
+            }
+        }
+
+        stack[++top] = node;
+        depthStack[top] = depth;
+    }
+
+    return stack[0];
+}
