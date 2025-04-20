@@ -1,0 +1,13 @@
+class Solution:
+    def numRabbits(self, answers: List[int]) -> int:
+        count = {} 
+        total = 0
+        for answer in answers:
+            if answer == 0: total += 1 
+            elif answer in count and count[answer] > 0: count[answer] -= 1   
+            else:
+                total += answer + 1  
+                count[answer] = answer  
+        return total
+
+        
