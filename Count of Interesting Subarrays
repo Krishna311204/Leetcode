@@ -1,0 +1,11 @@
+class Solution:
+    def countInterestingSubarrays(self, nums: List[int], modulo: int, k: int) -> int:
+        res = 0
+        prefix = [1]
+        mod_freq = defaultdict(int)
+        for n in nums:
+            prefix.append(prefix[-1] + ((n % modulo) == k))
+        for r in prefix:
+            res += mod_freq[((r - k) % modulo)]
+            mod_freq[r % modulo] += 1
+        return res
