@@ -1,0 +1,4 @@
+class Solution:
+    def minDominoRotations(self, a: List[int], b: List[int]) -> int:
+        f = lambda a,b,q:sum(v!=q==u or v!=q!=u and inf for v,u in zip(a,b))
+        return {inf:-1}.get(*[min(f(a,b,a[0]),f(b,a,a[0]),f(a,b,b[0]),f(b,a,b[0]))]*2)
