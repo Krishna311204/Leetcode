@@ -1,0 +1,25 @@
+class Solution:
+    def minTimeToReach(self, moveTime: List[List[int]]) -> int:
+        n = len(moveTime)
+        m = len(moveTime[0])
+        INF = float('inf')
+        dp = [[INF] * m for _ in range(n)]
+        heap = [(0, 0 , 0)]
+        moveTime[0][0] = 0
+        ways = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+        while heap:
+            time, row, col = heapq.heappop(heap)
+            if time >= dp[row][col]:
+                continue
+            if row == n - 1 and col == m - 1:
+                return time
+            dp[row][col] = time
+            for x, y in ways:
+                nextRow = row + x
+                nextCol = col + y
+                if 0 <= nextRow < n and 0 <= nextCol < m and dp[nextRow][nextCol] == INF:
+                    cost = (row + col) % 2 + 1
+                    count = max(moveTime[nextRow][nextCol], time)
+                    nextTime = count + cost
+                    heapq.heappush(heap, (nextTime, nextRow, nextCol))
+        return -1
