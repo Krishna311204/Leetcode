@@ -1,0 +1,9 @@
+class Solution:
+    def getLongestSubsequence(self, words: List[str], groups: List[int]) -> List[str]:
+        char = groups[0]^1
+        res = [words[0]]
+        for i, c in enumerate(groups):
+            if c==char:
+                res.append(words[i])
+                char = c^1
+        return res
