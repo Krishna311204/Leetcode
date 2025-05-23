@@ -1,0 +1,30 @@
+class Solution:
+    def maximumValueSum(self, nums: List[int], k: int, edges: List[List[int]]) -> int:
+        def dfs(graph, index, visited):
+            visited[index] = True
+            no_xor, xor = nums[index], nums[index] ^ k
+            max_sum, num_xors, min_diff = 0, 0, abs(no_xor - xor)
+            if xor > no_xor:
+                max_sum = xor
+                num_xors = 1
+            else:
+                max_sum = no_xor
+            for neigh in graph[index]:
+                if not visited[neigh]:
+                    no_xor, xor = dfs(graph, neigh, visited)
+                    min_diff = min(min_diff, abs(no_xor - xor))
+                    if xor > no_xor:
+                        max_sum += xor
+                        num_xors += 1
+                    else:
+                        max_sum += no_xor
+            if num_xors % 2 == 0:
+                return max_sum, max_sum - min_diff
+            else:
+                return max_sum - min_diff, max_sum
+        graph = defaultdict(list)
+        n = len(nums)
+        for fr, to in edges:
+            graph[fr].append(to)
+            graph[to].append(fr)
+        return dfs(graph, 0, [False] * n)[0]
